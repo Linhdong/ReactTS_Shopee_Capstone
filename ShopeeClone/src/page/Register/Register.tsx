@@ -7,9 +7,11 @@ import Input from 'src/components/Input'
 import { useMutation } from '@tanstack/react-query'
 import { getRules } from 'src/utils/rule'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { omit } from 'lodash'
+import { keys, omit } from 'lodash'
 import { schema, schemaInterface } from 'src/utils/rule'
 import { registerAccount } from 'src/apis/auth.api'
+import { isAxiosErrorUnprocessableEntityError } from 'src/utils/utils'
+import { ResponseApi } from 'src/types/utils.type'
 
 // interface FormData {
 //   email: string
@@ -23,6 +25,7 @@ export default function Register() {
     register,
     handleSubmit,
     getValues,
+    setError,
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(schema)
@@ -41,6 +44,19 @@ export default function Register() {
       registerAccountMutation.mutate(body, {
         onSuccess: (data) => {
           console.log(data)
+        },
+        onError: (error) => {
+          if (isAxiosErrorUnprocessableEntityError<ResponseApi<Omit<FormData, 'confirm_password'>>>(error)) {
+            const formError = error.response?.data.data
+            if (formError) {
+              Object.keys(formError).forEach((key) => {
+                setError(key as keyof Omit<FormData, 'confirm_password'>, {
+                  message: formError[key as keyof Omit<FormData, 'confirm_password'>],
+                  type: 'Server'
+                })
+              })
+            }
+          }
         }
       })
     }
