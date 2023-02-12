@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query'
 import { loginAccount } from 'src/apis/auth.api'
 import { isAxiosErrorUnprocessableEntityError } from 'src/utils/utils'
 import { ResponseApi } from 'src/types/utils.type'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { omit } from 'lodash'
 import Input from 'src/components/Input'
 
