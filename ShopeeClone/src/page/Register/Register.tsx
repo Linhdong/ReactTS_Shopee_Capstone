@@ -4,9 +4,12 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import Input from 'src/components/Input'
+import { useMutation } from '@tanstack/react-query'
 import { getRules } from 'src/utils/rule'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { omit } from 'lodash'
 import { schema, schemaInterface } from 'src/utils/rule'
+import { registerAccount } from 'src/apis/auth.api'
 
 // interface FormData {
 //   email: string
@@ -25,16 +28,26 @@ export default function Register() {
     resolver: yupResolver(schema)
   })
 
-  const rules = getRules(getValues)
+  // const rules = getRules(getValues)
+
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+  })
 
   const onSubmit = handleSubmit(
     (data) => {
       console.log(data)
-    },
-    (data) => {
-      const pass = getValues('password')
-      // console.log(pass)
+      const body = omit(data, ['confirm_password'])
+      registerAccountMutation.mutate(body, {
+        onSuccess: (data) => {
+          console.log(data)
+        }
+      })
     }
+    // (data) => {
+    //   const pass = getValues('password')
+    //   // console.log(pass)
+    // }
   )
 
   // console.log('Error: ', errors)
