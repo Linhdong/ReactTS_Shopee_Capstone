@@ -48,6 +48,7 @@ export default function Register() {
         onError: (error) => {
           if (isAxiosErrorUnprocessableEntityError<ResponseApi<Omit<FormData, 'confirm_password'>>>(error)) {
             const formError = error.response?.data.data
+            //C2: Xử lý lỗi khi có quá nhiều input trả error về
             if (formError) {
               Object.keys(formError).forEach((key) => {
                 setError(key as keyof Omit<FormData, 'confirm_password'>, {
@@ -56,6 +57,13 @@ export default function Register() {
                 })
               })
             }
+            //C1: Xử lý lỗi khi chỉ có 1 vài input error trả về
+            // if (formError?.email) {
+            //   setError('email', {
+            //     message: formError.email,
+            //     type: 'Server'
+            //   })
+            // }
           }
         }
       })
