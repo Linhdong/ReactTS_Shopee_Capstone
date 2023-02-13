@@ -50,7 +50,7 @@ export default function Header() {
             renderPopover={
               <div className='shaddow-md relative rounded-sm border border-gray-200 bg-white'>
                 <Link
-                  to='/'
+                  to='/profile'
                   className='block w-full bg-white py-3 px-5 text-left hover:bg-slate-100 hover:text-cyan-500'
                 >
                   Tài khoản của tôi
