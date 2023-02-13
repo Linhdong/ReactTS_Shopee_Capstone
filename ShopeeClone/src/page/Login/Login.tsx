@@ -11,6 +11,7 @@ import { SuccessResponse } from 'src/types/utils.type'
 import { omit } from 'lodash'
 import Input from 'src/components/Input'
 import { AppContext } from 'src/contexts/app.context'
+import Button from 'src/components/Button'
 
 type FormData = Omit<schemaInterface, 'confirm_password'>
 const loginSchema = schema.omit(['confirm_password'])
@@ -82,12 +83,14 @@ export default function Login() {
                 autoComplete='on'
               />
               <div className='mt-3'>
-                <button
+                <Button
                   type='submit'
                   className='w-full bg-red-500 py-4 px-2 text-center text-sm uppercase text-white hover:bg-red-600'
+                  isLoading={loginAccountMutation.isLoading}
+                  disabled={loginAccountMutation.isLoading}
                 >
                   Đăng nhập
-                </button>
+                </Button>
               </div>
               <div className='justify-content-center mt-8 flex items-center'>
                 <span className='text-slate-300'>Bạn đã có tài khoản chưa ?</span>
