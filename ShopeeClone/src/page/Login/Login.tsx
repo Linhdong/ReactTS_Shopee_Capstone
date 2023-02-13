@@ -1,20 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { schema, schemaInterface } from 'src/utils/rule'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { loginAccount } from 'src/apis/auth.api'
 import { isAxiosErrorUnprocessableEntityError } from 'src/utils/utils'
-import { ResponseApi } from 'src/types/utils.type'
+import { SuccessResponse } from 'src/types/utils.type'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { omit } from 'lodash'
 import Input from 'src/components/Input'
+import { AppContext } from 'src/contexts/app.context'
 
 type FormData = Omit<schemaInterface, 'confirm_password'>
 const loginSchema = schema.omit(['confirm_password'])
 
 export default function Login() {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -34,10 +37,11 @@ export default function Login() {
     const body = data
     loginAccountMutation.mutate(body, {
       onSuccess: (data) => {
-        console.log(data)
+        setIsAuthenticated(true)
+        navigate('/')
       },
       onError: (error) => {
-        if (isAxiosErrorUnprocessableEntityError<ResponseApi<FormData>>(error)) {
+        if (isAxiosErrorUnprocessableEntityError<SuccessResponse<FormData>>(error)) {
           const formError = error.response?.data.data
           //C2: Xử lý lỗi khi có quá nhiều input trả error về
           if (formError) {

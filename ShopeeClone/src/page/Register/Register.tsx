@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Input from 'src/components/Input'
 import { useMutation } from '@tanstack/react-query'
 import { getRules } from 'src/utils/rule'
@@ -9,7 +9,8 @@ import { omit } from 'lodash'
 import { schema, schemaInterface } from 'src/utils/rule'
 import { registerAccount } from 'src/apis/auth.api'
 import { isAxiosErrorUnprocessableEntityError } from 'src/utils/utils'
-import { ResponseApi } from 'src/types/utils.type'
+import { ErrorResponse } from 'src/types/utils.type'
+import { AppContext } from 'src/contexts/app.context'
 
 // interface FormData {
 //   email: string
@@ -19,6 +20,8 @@ import { ResponseApi } from 'src/types/utils.type'
 type FormData = schemaInterface
 
 export default function Register() {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -40,11 +43,12 @@ export default function Register() {
       console.log(data)
       const body = omit(data, ['confirm_password'])
       registerAccountMutation.mutate(body, {
-        onSuccess: (data) => {
-          console.log(data)
+        onSuccess: () => {
+          setIsAuthenticated(true)
+          navigate('/')
         },
         onError: (error) => {
-          if (isAxiosErrorUnprocessableEntityError<ResponseApi<Omit<FormData, 'confirm_password'>>>(error)) {
+          if (isAxiosErrorUnprocessableEntityError<ErrorResponse<Omit<FormData, 'confirm_password'>>>(error)) {
             const formError = error.response?.data.data
             //C2: Xử lý lỗi khi có quá nhiều input trả error về
             if (formError) {
