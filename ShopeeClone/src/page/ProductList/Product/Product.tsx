@@ -1,16 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
+import { Product as ProductType } from 'src/types/product.type'
+import { formatCurrency, formatNUmberToSocialStyle } from 'src/utils/utils'
 
-export default function Product() {
+interface Props {
+  product: ProductType
+}
+
+export default function Product({ product }: Props) {
   return (
     <Link to={path.home}>
       <div className='hover:shaddow-md rounded-sm bg-white shadow transition-transform duration-100 hover:translate-y-[-0.0625rem]'>
         <div className='relative w-full pt-[100%]'>
           <img
-            alt='Khuyên Tai Thép Không Gỉ Không Bấm Lỗ Cho Nam Khuyên Tai Nam Không Cần Bấm Lỗ'
+            alt={product.name}
             className='absolute top-0 left-0 h-full w-full bg-white object-cover'
-            src='https://cf.shopee.vn/file/sg-11134201-22120-sg9ilxi1mzkv9d_tn'
+            src={product.image}
           />
         </div>
         <div className='overfollow-hiden p-2'>
@@ -20,11 +26,11 @@ export default function Product() {
           <div className='mt-3 flex items-center'>
             <div className='max-w-[50%] truncate text-gray-500 line-through'>
               <span className='text-xs'>đ</span>
-              <span>5.000</span>
+              <span>{formatCurrency(product.price_before_discount)}</span>
             </div>
             <div className='ml-1 truncate text-orange'>
               <span className='text-xs'>đ</span>
-              <span>2.000</span>
+              <span>{formatCurrency(product.price)}</span>
             </div>
           </div>
           <div className='mt-3 flex items-center justify-end'>
@@ -63,8 +69,8 @@ export default function Product() {
               </div>
             </div>
             <div className='ml-2 text-sm'>
-              <span>5.66k</span>
-              <span className='ml-1'>Đã bán</span>
+              <span className='ml-1'>Đã bán </span>
+              <span>{formatNUmberToSocialStyle(product.sold)}</span>
             </div>
           </div>
         </div>
