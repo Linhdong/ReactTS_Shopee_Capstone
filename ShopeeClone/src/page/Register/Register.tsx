@@ -7,7 +7,7 @@ import { getRules } from 'src/utils/rule'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { omit } from 'lodash'
 import { schema, schemaInterface } from 'src/utils/rule'
-import { registerAccount } from 'src/apis/auth.api'
+import authApi from 'src/apis/auth.api'
 import { isAxiosErrorUnprocessableEntityError } from 'src/utils/utils'
 import { ErrorResponse } from 'src/types/utils.type'
 import { AppContext } from 'src/contexts/app.context'
@@ -36,7 +36,7 @@ export default function Register() {
   // const rules = getRules(getValues)
 
   const registerAccountMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.registerAccount(body)
   })
 
   const onSubmit = handleSubmit(

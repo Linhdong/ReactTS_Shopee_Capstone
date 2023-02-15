@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { schema, schemaInterface } from 'src/utils/rule'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
-import { loginAccount } from 'src/apis/auth.api'
+import authApi from 'src/apis/auth.api'
 import { isAxiosErrorUnprocessableEntityError } from 'src/utils/utils'
 import { SuccessResponse } from 'src/types/utils.type'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,7 +30,7 @@ export default function Login() {
   })
 
   const loginAccountMutation = useMutation({
-    mutationFn: (body: FormData) => loginAccount(body)
+    mutationFn: (body: FormData) => authApi.loginAccount(body)
   })
 
   const onSubmit = handleSubmit((data) => {
