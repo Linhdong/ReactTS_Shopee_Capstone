@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from 'src/components/Input'
 import { useMutation } from '@tanstack/react-query'
-import { getRules } from 'src/utils/rule'
+import { getRules, Schema } from 'src/utils/rule'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { omit } from 'lodash'
 import { schema, schemaInterface } from 'src/utils/rule'
@@ -18,8 +18,8 @@ import Button from 'src/components/Button'
 //   password: string
 //   confirm_password: string
 // }
-type FormData = schemaInterface
-
+type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
+const registerSchema = schema.pick(['email', 'password', 'confirm_password'])
 export default function Register() {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
@@ -30,7 +30,7 @@ export default function Register() {
     setError,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(registerSchema)
   })
 
   // const rules = getRules(getValues)
